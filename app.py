@@ -1,45 +1,37 @@
 from flask import Flask
-import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+from sqlalchemy.ext.automap import automap_base
+
+# Database Setup
+engine = create_engine("sqlite:///C:/Users/leors/Project_3/Resources/Diabetes.db")
+
+# Reflect the database tables
+Base = automap_base()
+Base.prepare(engine, reflect=True)
 
 app = Flask(__name__)
 
-# Configuration for SQLite database
-DATABASE = 'C:/Users/leors/Project_3/healthcare_data.db'
-
-# Function to create a connection to the SQLite database
-def get_db():
-    db = sqlite3.connect(DATABASE)
-    db.row_factory = sqlite3.Row
-    return db
-
 @app.route('/')
-def hello_leor():
-    return "Hello Leor"
+def dashboard():
+    # Create a session to interact with the database
+    session = Session(engine)
+    
+    # Close the session
+    session.close()
+    
+    # Return a blank webpage (you can add HTML or a template here)
+    return "This is a blank webpage with an SQLAlchemy database connection."
+
+@app.route('/connection_status')
+def connection_status():
+    try:
+        # Attempt to connect to the database
+        engine.connect()
+        return "Database connected successfully"
+    except:
+        return "Database connection failed"
 
 if __name__ == '__main__':
-    app.run()
-
-# Create an SQLite database and table to store your data
-conn = sqlite3.connect('C:/Users/leors/Project_3/healthcare_data.db')
-cursor = conn.cursor()
-
-# Create a table to store your data (modify the structure to match your CSV columns)
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS healthcare_data (
-        id INTEGER PRIMARY KEY,
-        Pregnancies INTEGER,
-        Glucose INTEGER,
-        BloodPressure INTEGER,
-        SkinThickness INTEGER,
-        Insulin INTEGER,
-        BMI REAL,
-        DiabetesPedigreeFunction REAL,
-        Age INTEGER,
-        Outcome INTEGER
-    )
-''')
-
-conn.commit()
-conn.close()
-
+    app.run(debug=True)
 
