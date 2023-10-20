@@ -1,36 +1,34 @@
-from flask import Flask
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
+from flask import Flask, jsonify
+import numpy as np
+import json
+import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, func
+from bs4 import BeautifulSoup as bs
+import requests
+from splinter import Browser
+from flask import render_template
+
 
 # Database Setup
-engine = create_engine("sqlite:///C:/Users/leors/Project_3/Resources/Diabetes.db")
+engine = create_engine("sqlite:///C:/Users/leors/Project_3/resources/diabetes_data.db")
 
-# Reflect the database tables
+# reflect an existing database into a new model
 Base = automap_base()
-Base.prepare(engine, reflect=True)
 
+# reflect the tables
+Base.prepare(autoload_with=engine)
+
+# Save reference to the table
+Diabetes = Base.classes.diabetes_table
+
+# Flask Setup
 app = Flask(__name__)
 
-@app.route('/')
-def dashboard():
-    # Create a session to interact with the database
-    session = Session(engine)
-    
-    # Close the session
-    session.close()
-    
-    # Return a blank webpage (you can add HTML or a template here)
-    return "This is a blank webpage with an SQLAlchemy database connection."
-
-@app.route('/connection_status')
-def connection_status():
-    try:
-        # Attempt to connect to the database
-        engine.connect()
-        return "Database connected successfully"
-    except:
-        return "Database connection failed"
+@app.route("/")
+def welcome():
+    return render_template("index.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
