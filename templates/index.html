@@ -1,56 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Bellybutton Biodiversity</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Diabetes Dashboard</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .wider-well {
+            min-width: 230px;
+        }
+
+        #bar {
+            margin-left: 70px;
+        }
+    </style>
 </head>
-
 <body>
-
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12 jumbotron text-center">
-        <h1>Belly Button Biodiversity Dashboard</h1>
-        <p>Use the interactive charts below to explore the dataset</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-2">
-        <div class="well">
-          <h5>Test Subject ID No.:</h5>
-          <select id="selDataset" onchange="optionChanged(this.value)"></select>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 jumbotron text-center">
+                <h1>Diabetes Dashboard</h1>
+                <p>Use the interactive charts below to explore the dataset</p>
+            </div>
         </div>
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title">Demographic Info</h3>
-          </div>
-          <div id="sample-metadata" class="panel-body"></div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="well">
+                    <h5>Test Subject ID No.</h5>
+                    <select id="selDataset" onchange="optionChanged(this.value)">
+                        {% for record in data %}
+                        <option value="{{ record.Id }}">{{ record.Id }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Test Subject Data</h3>
+                    </div>
+                    <div id="sample-metadata" class="panel-body"></div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="well wider-well">
+                    <h5>Variable</h5>
+                    <select id="anotherDropdown" onchange="anotherOptionChanged(this.value)">
+                        {% if data %}
+                        {% for column, value in data[0].items() %}
+                        <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="bar"></div>
+            </div>
+            <div class="col-md-5">
+                <div id="gauge"></div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-5">
-        <div id="bar"></div>
-      </div>
-      <div class="col-md-5">
-        <div id="gauge"></div>
-      </div>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Pie chart replaces the bubble chart here -->
+                <div id="pie"></div>
+            </div>
+        </div>
     </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div id="bubble"></div>
-      </div>
-    </div>
-  </div>
 
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="./static/js/app.js"></script>
-  <script src="./static/js/bonus.js"></script>
-
+    <script>
+        var diabetesData = {{ data if data else []|tojson|safe }};
+        var outcomeCounts = {{ outcome_counts|tojson|safe }};
+    </script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
-
 </html>
-

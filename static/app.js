@@ -1,100 +1,113 @@
-// Constants for data URLs
-const DATA_URL = "/";  // Change this to your Flask data endpoint
+document.addEventListener("DOMContentLoaded", function() {
+  const idDropdown = document.getElementById('selDataset');
+  const columnDropdown = document.getElementById('anotherDropdown');
 
-// Initialization function
-function init() {
-    d3.json(DATA_URL).then(function (data) {
-        const names = data.names;
-        const dropdown = d3.select('#selDataset');
-        names.forEach(name => dropdown.append('option').text(name));
-        const initialId = names[0];
-        updatePlotly(initialId);
-    });
-}
+  // Display the initial ID's data
+  let initialData = diabetesData.find(data => data.Id == idDropdown.value);
+  displayDemographicInfo(initialData);
 
-// Update the plot
-function updatePlotly(id) {
-    d3.json(DATA_URL).then(function (data) {
-        const samples = data.samples.find(sample => sample.id === id);
-        const { sample_values, otu_ids, otu_labels } = samples;
+  updateBarChart(idDropdown.value, columnDropdown.value);
 
-        const metadata = data.metadata.find(metadata => metadata.id === parseInt(id));
-        displayDemographicInfo(metadata);
+  // Display pie chart on load
+  updatePieChart();
+});
 
-        createBarChart(sample_values, otu_ids, otu_labels);
-        createBubbleChart(otu_ids, sample_values, otu_labels);
-        plotGaugeChart(metadata.wfreq);
-    });
-}
-
-// Display demographic information
-function displayDemographicInfo(metadata) {
-    const sampleMetadata = d3.select("#sample-metadata");
-    sampleMetadata.html('');
-    Object.entries(metadata).forEach(([key, value]) => {
-        sampleMetadata.append('p').text(`${key}: ${value}`);
-    });
-}
-
-// Create the bar chart
-function createBarChart(values, ids, labels) {
-    const trace1 = {
-        x: values.slice(0, 10).reverse(),
-        y: ids.slice(0, 10).map(id => "OTU " + id).reverse(),
-        text: labels.slice(0, 10).reverse(),
-        type: 'bar',
-        orientation: 'h',
-        marker: {
-            color: 'DeepSkyBlue',
-            opacity: 0.6,
-            line: {
-                color: 'DarkBlue',
-                width: 1.5
-            }
-        }
-    };
-
-    const layout1 = {
-        title: '<b>Top 10 OTU</b>',
-    };
-
-    const data = [trace1];
-    Plotly.newPlot('bar', data, layout1);
-}
-
-// Create the bubble chart
-function createBubbleChart(otu_ids, sample_values, otu_labels) {
-    const trace2 = {
-        x: otu_ids,
-        y: sample_values,
-        text: otu_labels,
-        mode: 'markers',
-        marker: {
-            color: otu_ids,
-            size: sample_values
-        }
-    };
-
-    const layout2 = {
-        title: '<b>Bubble Chart</b>',
-        automargin: true,
-        autosize: true,
-        showlegend: false,
-        margin: {
-            l: 150,
-            r: 50,
-            b: 50,
-            t: 50,
-            pad: 4
-        }
-    };
-
-    const data2 = [trace2];
-    Plotly.newPlot('bubble', data2, layout2);
-}
-// Call updatePlotly
 function optionChanged(id) {
-    updatePlotly(id);
+  const column = document.getElementById('anotherDropdown').value;
+  updateBarChart(id, column);
+
+  // Get the selected data based on the chosen ID
+  let selectedData = diabetesData.find(data => data.Id == id);
+  displayDemographicInfo(selectedData);
 }
 
-init();
+function anotherOptionChanged(column) {
+  const id = document.getElementById('selDataset').value;
+  updateBarChart(id, column);
+}
+
+function updateBarChart(id, column) {
+  const formData = new FormData();
+  formData.append('id', id);
+  formData.append('column', column);
+
+  fetch('/', {
+      method: 'POST',
+      body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+      const trace = {
+          x: ['Individual', 'Mean'],
+          y: [data.individual, data.mean],
+          type: 'bar',
+          marker: {
+              color: ['SteelBlue', 'DarkSalmon']
+          },
+          width: [0.4, 0.4]
+      };
+      const layout = {
+          title: {
+              text:`Comparison of ID ${id} vs Mean of Sample Group`,
+              font: {
+                  size: 19,
+                  color: 'black'
+              }
+          },
+          xaxis: {
+              title: {
+                  text: 'Category',
+                  font: {
+                      size: 16,
+                      color: 'black'
+                  }
+              },
+              tickfont: {
+                  size: 16,
+                  color: 'black'
+              }
+          },
+          yaxis: {
+              title: {
+                  text: column,
+                  font: {
+                      size: 16,
+                      color: 'black'
+                  }
+              },
+              tickfont: {
+                  size: 16,
+                  color: 'black'
+              }
+          },
+          barmode: 'group',
+          bargap: 0.15,
+          bargroupgap: 0.1
+      };
+      Plotly.newPlot('bar', [trace], layout);
+  });
+}
+
+function displayDemographicInfo(metadata) {
+  const sampleMetadata = d3.select("#sample-metadata");
+  sampleMetadata.html('');
+  Object.entries(metadata).forEach(([key, value]) => {
+      sampleMetadata.append('p').text(`${key}: ${value}`);
+  });
+}
+
+function updatePieChart() {
+  const pieData = [{
+    values: [outcomeCounts["0"], outcomeCounts["1"]],
+    labels: ['0', '1'],
+    type: 'pie'
+  }];
+
+  const pieLayout = {
+    title: "Outcomes Distribution",
+    height: 400,
+    width: 500
+  };
+
+  Plotly.newPlot('pie', pieData, pieLayout);
+}
