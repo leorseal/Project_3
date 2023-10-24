@@ -58,13 +58,13 @@ function updateBarChart(id, column) {
     .then(response => response.json())
     .then(data => {
         const trace = {
-            x: ['Individual', 'Mean'],
-            y: [data.individual, data.mean],
+            x: ['Id', 'Mean Diabetes Positive', 'Mean Diabetes Negative'],
+            y: [data.individual, data.mean_positive, data.mean_negative],
             type: 'bar',
             marker: {
-                color: ['SteelBlue', 'DarkSalmon']
+                color: ['SteelBlue', 'DarkSalmon', 'MediumSeaGreen']
             },
-            width: [0.4, 0.4]
+            width: [0.4, 0.4, 0.4]
         };
         const layout = {
             title: {

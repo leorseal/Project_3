@@ -52,11 +52,16 @@ def welcome():
         session = Session(engine)
 
         individual_value = session.query(getattr(Diabetes, column)).filter(Diabetes.Id == id).scalar()
-        mean_value = session.query(func.avg(getattr(Diabetes, column))).scalar()
+        mean_positive = session.query(func.avg(getattr(Diabetes, column))).filter(Diabetes.Outcome == 1).scalar()
+        mean_negative = session.query(func.avg(getattr(Diabetes, column))).filter(Diabetes.Outcome == 0).scalar()
 
         session.close()
 
-        return jsonify({"individual": individual_value, "mean": mean_value})
+        return jsonify({
+            "individual": individual_value,
+            "mean_positive": mean_positive,
+            "mean_negative": mean_negative
+        })
 
     return render_template("index.html", data=diabetes_data, outcome_counts=outcome_counts)
 
