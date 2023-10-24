@@ -11,7 +11,7 @@ function initializePage() {
     displayDemographicInfo(initialData);
     updateBarChart(idDropdown.property('value'), columnDropdown.property('value'));
 
-    drawPieChart(outcomeCounts); // New line to draw the pie chart
+    drawPieChart(outcomeCounts); 
 }
 
 function optionChanged(id) {
@@ -49,7 +49,7 @@ function updateBarChart(id, column) {
                     width: 1.5
                 }
             },
-            width: [0.3, 0.3, 0.3] // Making bars slightly narrower
+            width: [0.3, 0.3, 0.3] 
         };
 
         const layout = {
@@ -66,15 +66,15 @@ function updateBarChart(id, column) {
             barmode: 'group',
             bargap: 0.15,
             bargroupgap: 0.1,
-            width: 780,   // Reduced width
-            height: 500,  // Reduced height
+            width: 780,   
+            height: 500,  
             paper_bgcolor: 'rgba(245, 246, 249, 1)',
             plot_bgcolor: 'rgba(245, 246, 249, 1)',
             margin: {
-                l: 70,  // Increased left margin
+                l: 70,  
                 r: 50,
-                b: 60,  // Increased bottom margin
-                t: 70,  // Increased top margin
+                b: 60,  
+                t: 70,  
                 pad: 4
             },
             gridcolor: 'rgba(128, 128, 128, 0.1)'
@@ -92,7 +92,7 @@ function createAxis(titleText, titleSize, tickSize) {
                 size: titleSize,
                 color: 'black'
             },
-            standoff: 20 // Increasing space between axis and title
+            standoff: 20 
         },
         tickfont: {
             size: tickSize,
@@ -113,10 +113,10 @@ function drawPieChart(outcomeCounts) {
             colors: ['MediumSeaGreen', 'DarkSalmon'],
             line: {
                 color: 'black',
-                width: 2  // Adjust this for a thicker/thinner border
+                width: 2  
             }
         },
-        pull: [0.1, 0.1]  // Adjust this for more/less space between slices
+        pull: [0.1, 0.1]  
     }];
 
     const layout = {
@@ -138,30 +138,31 @@ function drawPieChart(outcomeCounts) {
 
 function displayDemographicInfo(data) {
     const demographicInfoBox = d3.select("#sample-metadata");
-    demographicInfoBox.html("");  // Clear existing data
+    demographicInfoBox.html("");  
 
     Object.entries(data).forEach(([key, value]) => {
-        demographicInfoBox.append("h6").text(`${key}: ${value}`);
+        demographicInfoBox.append("h6").html(`<b>${key}</b>: ${value}`);
     });
 
     updateOutcomeBox(data.Outcome);
 }
 
+
 function updateOutcomeBox(outcomeValue) {
     const outcomeBox = d3.select("#outcome-content");
-    outcomeBox.html("");  // Clear previous content
+    outcomeBox.html("");  
 
-    let textColor = 'black';  // Default color
+    let textColor = 'black';  
     let outcomeText = "Unknown Outcome";
 
     switch (outcomeValue) {
         case 1:
             outcomeText = "Positive";
-            textColor = 'DarkSalmon';  // Matching the color of the 'Mean Diabetes Positive' bar
+            textColor = 'DarkSalmon';  
             break;
         case 0:
             outcomeText = "Negative";
-            textColor = 'MediumSeaGreen';  // Matching the color of the 'Mean Diabetes Negative' bar
+            textColor = 'MediumSeaGreen';  
             break;
     }
 

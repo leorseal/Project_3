@@ -57,21 +57,21 @@
             margin-bottom: 1rem;
         }
 
-        /* Updated styles for the Outcome card */
+        #sample-metadata h6 {
+            display: inline-block; 
+            width: 48%; 
+            margin-right: 1%;
+        }
+
         .outcome-card {
-            width: 118%; /* adjust this to your liking */
+            width: 100%; 
         }
 
-        .outcome-card .card-body {
-            font-size: 0.8rem; /* adjust this value to make the text within the Outcome card smaller or larger */
-        }
-
-        /* Added the centered-container style */
         .centered-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 60vh;
+            justify-content: left;
+            align-items: left;
+            height: 10vh; 
         }
     </style>
 </head>
@@ -85,7 +85,8 @@
         </div>
         
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
+                <!-- Test Subject ID dropdown -->
                 <div class="well mb-4 p-3 bg-white shadow-sm">
                     <h5><i class="fas fa-user-tag mr-2"></i> Test Subject ID No.</h5>
                     <select id="selDataset" class="form-select" onchange="optionChanged(this.value)">
@@ -95,15 +96,9 @@
                     </select>
                 </div>
 
-                <div class="card border-primary mb-3">
-                    <div class="card-header bg-primary text-white">Test Subject Data</div>
-                    <div id="sample-metadata" class="card-body"></div>
-                </div>
-            </div>
-            
-            <div class="col-md-2">
+                <!-- Variable dropdown -->
                 <div class="well wider-well mb-4 p-3 bg-white shadow-sm">
-                    <h5><i class="fas fa-filter mr-2"></i>  Variable</h5>
+                    <h5><i class="fas fa-filter mr-2"></i> Variable</h5>
                     <select id="anotherDropdown" class="form-select" onchange="anotherOptionChanged(this.value)">
                         {% if data %}
                         {% for column, value in data[0].items() %}
@@ -113,14 +108,21 @@
                     </select>
                 </div>
 
-                <!-- Retained the outcome-card class on the Outcome card -->
+                <!-- Test Subject Data card -->
+                <div class="card border-primary mb-3 outcome-card">
+                    <div class="card-header bg-primary text-white">Test Subject Data</div>
+                    <div id="sample-metadata" class="card-body"></div>
+                </div>
+
+                <!-- Outcome card -->
                 <div class="card border-primary mb-5 outcome-card">
                     <div class="card-header bg-primary text-center text-white">Outcome</div>
                     <div id="outcome-content" class="card-header text-center"></div>
                 </div>
             </div>
-            
-            <div class="col-md-6">
+
+            <!-- Bar chart column -->
+            <div class="col-md-8">
                 <div id="bar"></div>
             </div>
 
