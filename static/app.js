@@ -99,7 +99,18 @@ function displayDemographicInfo(data) {
   Object.entries(data).forEach(([key, value]) => {
       demographicInfoBox.append("h6").text(`${key}: ${value}`);
   });
-}
 
+  // Update Outcome card content based on Outcome value
+  let outcomeBox = d3.select("#outcome-content");
+  outcomeBox.html("");  // clear previous content
+  
+  if (data.Outcome == 1) {
+      outcomeBox.text("Positive");
+  } else if (data.Outcome == 0) {
+      outcomeBox.text("Negative");
+  } else {
+      outcomeBox.text("Unknown Outcome"); // just in case there's an unexpected value
+  }
+}
 
 

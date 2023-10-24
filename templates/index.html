@@ -55,6 +55,15 @@
             font-weight: 600;
             margin-bottom: 1rem;
         }
+
+        /* Updated styles for the Outcome card */
+        .outcome-card {
+            width: 118%; /* adjust this to your liking */
+        }
+
+        .outcome-card .card-body {
+            font-size: 0.8rem; /* adjust this value to make the text within the Outcome card smaller or larger */
+        }
     </style>
 </head>
 
@@ -69,7 +78,7 @@
         <div class="row">
             <div class="col-md-2">
                 <div class="well mb-4 p-3 bg-white shadow-sm">
-                    <h5><i class="fas fa-user-tag mr-2"></i>Test Subject ID No.</h5>
+                    <h5><i class="fas fa-user-tag mr-2"></i> Test Subject ID No.</h5>
                     <select id="selDataset" class="form-select" onchange="optionChanged(this.value)">
                         {% for record in data %}
                         <option value="{{ record.Id }}">{{ record.Id }}</option>
@@ -85,7 +94,7 @@
             
             <div class="col-md-2">
                 <div class="well wider-well mb-4 p-3 bg-white shadow-sm">
-                    <h5><i class="fas fa-filter mr-2"></i>Variable</h5>
+                    <h5><i class="fas fa-filter mr-2"></i>  Variable</h5>
                     <select id="anotherDropdown" class="form-select" onchange="anotherOptionChanged(this.value)">
                         {% if data %}
                         {% for column, value in data[0].items() %}
@@ -93,6 +102,12 @@
                         {% endfor %}
                         {% endif %}
                     </select>
+                </div>
+
+                <!-- Retained the outcome-card class on the Outcome card -->
+                <div class="card border-primary mb-5 outcome-card">
+                    <div class="card-header bg-primary text-center text-white">Outcome</div>
+                    <div id="outcome-content" class="card-header text-center"></div>
                 </div>
             </div>
             
@@ -123,3 +138,4 @@
 </body>
 
 </html>
+
