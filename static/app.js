@@ -116,14 +116,19 @@ function updateOutcomeBox(outcomeValue) {
     const outcomeBox = d3.select("#outcome-content");
     outcomeBox.html("");  // Clear previous content
 
+    let textColor = 'black';  // Default color
+    let outcomeText = "Unknown Outcome";
+
     switch (outcomeValue) {
         case 1:
-            outcomeBox.text("Positive");
+            outcomeText = "Positive";
+            textColor = 'DarkSalmon';  // Matching the color of the 'Mean Diabetes Positive' bar
             break;
         case 0:
-            outcomeBox.text("Negative");
+            outcomeText = "Negative";
+            textColor = 'MediumSeaGreen';  // Matching the color of the 'Mean Diabetes Negative' bar
             break;
-        default:
-            outcomeBox.text("Unknown Outcome");
     }
+
+    outcomeBox.style('color', textColor).text(outcomeText);
 }
