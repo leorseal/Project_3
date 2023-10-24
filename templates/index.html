@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
     <title>Diabetes Dashboard</title>
     <link 
         rel="stylesheet" 
@@ -64,6 +65,14 @@
         .outcome-card .card-body {
             font-size: 0.8rem; /* adjust this value to make the text within the Outcome card smaller or larger */
         }
+
+        /* Added the centered-container style */
+        .centered-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+        }
     </style>
 </head>
 
@@ -115,14 +124,11 @@
                 <div id="bar"></div>
             </div>
 
-            <div class="col-md-2">
-                <div id="gauge"></div>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div id="pie"></div>
+            <!-- Pie Chart centered container -->
+            <div class="col-md-12 mt-4">
+                <div class="centered-container">
+                    <div id="pie"></div>
+                </div>
             </div>
         </div>
     </div>

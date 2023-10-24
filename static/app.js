@@ -10,6 +10,8 @@ function initializePage() {
 
     displayDemographicInfo(initialData);
     updateBarChart(idDropdown.property('value'), columnDropdown.property('value'));
+
+    drawPieChart(outcomeCounts); // New line to draw the pie chart
 }
 
 function optionChanged(id) {
@@ -98,6 +100,39 @@ function createAxis(titleText, titleSize, tickSize) {
         },
         tickangle: 0
     };
+}
+
+function drawPieChart(outcomeCounts) {
+    const data = [{
+        values: [outcomeCounts['0'], outcomeCounts['1']],
+        labels: ['Negative', 'Positive'],
+        type: 'pie',
+        textinfo: 'label+percent',
+        insidetextorientation: 'radial',
+        marker: {
+            colors: ['MediumSeaGreen', 'DarkSalmon'],
+            line: {
+                color: 'black',
+                width: 2  // Adjust this for a thicker/thinner border
+            }
+        },
+        pull: [0.1, 0.1]  // Adjust this for more/less space between slices
+    }];
+
+    const layout = {
+        title: {
+            text: 'Distribution of Outcomes',
+            font: {
+                size: 24,
+                family: "Arial Bold, sans-serif",
+                    olor: 'black'
+            }
+        },
+        height: 500,
+        width: 500
+    };
+
+    Plotly.newPlot('pie', data, layout);
 }
 
 
